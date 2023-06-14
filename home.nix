@@ -33,8 +33,8 @@ rec {
       enable = true;
       extensions = [
         "aghfnjkcakhmadgdomlmlhhaocbkloab"
-        # "kfdniefadaanbjodldohaedphafoffoh" # Typhon wallet
-        "gafhhkghbfjjkeiendhlofajokpaflmk" # Lace wallet
+        "kfdniefadaanbjodldohaedphafoffoh" # Typhon wallet
+        # "gafhhkghbfjjkeiendhlofajokpaflmk" # Lace wallet
         "cfhdojbkjhnklbpkdaibdccddilifddb"
         "efaidnbmnnnibpcajpcglclefindmkaj"
         "nngceckbapebfimnlniiiahkandclblb"
@@ -52,7 +52,10 @@ rec {
 
     gh = {
       enable = true;
-      settings.git_protocol = "ssh";
+      settings = {
+        git_protocol = "ssh";
+        editor = "hx";
+      };
     };
 
     nushell = {
@@ -84,6 +87,8 @@ rec {
       };
     };
 
+    ripgrep.enable = true;
+
     rofi = {
       enable = true;
       terminal = "${pkgs.alacritty}/bin/alacritty";
@@ -93,9 +98,21 @@ rec {
       };
     };
 
+    starship = {
+      enable = true;
+      enableNushellIntegration = true;
+    };
+
     xmobar = {
       enable = true;
       extraConfig = builtins.readFile ./xmonad/xmobar.conf;
+    };
+
+    zathura.enable = true;
+
+    zoxide = {
+      enable = true;
+      enableNushellIntegration = true;
     };
   };
 
@@ -108,6 +125,10 @@ rec {
         day = 1000;
         night = 1000;
       };
+    };
+    home-manager.autoUpgrade = {
+      enable = true;
+      frequency = "weekly";
     };
   };
 }
