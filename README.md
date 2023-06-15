@@ -1,2 +1,3 @@
-# nixos-config
-My NixOS config
+# Hari Amoor's NixOS config
+
+Reuse at your own peril
