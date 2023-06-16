@@ -46,7 +46,6 @@
     pulseaudio.enable = true;
     opengl.enable = true;
     onlykey.enable = true;
-    bluetooth.enable = true;
   };
 
   services = {
