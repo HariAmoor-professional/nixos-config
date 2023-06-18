@@ -1,4 +1,4 @@
-{ config, pkgs, myUserName ? "hariamoor", ... }:
+{ config, pkgs, myUserName, ... }:
 rec {
   nixpkgs.config = {
     allowUnfree = true;
