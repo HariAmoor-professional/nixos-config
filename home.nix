@@ -11,6 +11,7 @@ rec {
     packages = with pkgs; [
       bitwarden
       bitwarden-cli
+      discord
       element-desktop
       nix-prefetch-github
       onlykey
@@ -21,6 +22,7 @@ rec {
       trezorctl
       zoom-us
     ];
+    stateVersion = "23.11";
   };
 
   programs = {

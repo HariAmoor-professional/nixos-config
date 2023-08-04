@@ -37,9 +37,7 @@ main = do
         logHook =
           (dynamicLogString def >>= xmonadPropLog)
             <> logHook desktopConfig
-            <> wallpaperSetter defWallpaperConf,
-        startupHook = do
-          spawn "xmobar"
+            <> wallpaperSetter defWallpaperConf
       }
       `additionalKeysP` [ ("M-S-q", confirmPrompt myXPConfig "exit" (io exitSuccess)), -- Add some extra key bindings:
                           ("M-p", spawn "rofi -show drun"),

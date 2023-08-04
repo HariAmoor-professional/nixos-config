@@ -1,5 +1,8 @@
-{ config, pkgs, ... }: {
-  boot.loader.systemd-boot.enable = true;
+{ config, pkgs, myUserName, ... }: {
+  boot = {
+    binfmt.emulatedSystems = [ "aarch64-linux" ];
+    loader.systemd-boot.enable = true;
+  };
 
   fonts = {
     fonts = with pkgs; [ nerdfonts ];
@@ -23,7 +26,7 @@
         "iohk.cachix.org-1:DpRUyj7h7V830dp/i6Nti+NEO2/nhblbov/8MW7Rqoo="
       ];
       auto-optimise-store = true;
-      trusted-users = [ "hariamoor" ];
+      trusted-users = [ myUserName ];
       max-jobs = "auto";
     };
   };
@@ -67,12 +70,14 @@
   };
 
   users = {
-    users.hariamoor = {
-      home = "/home/hariamoor";
+    users.${myUserName} = {
+      home = "/home/${myUserName}";
       description = "Main user account";
-      extraGroups = [ "docker" "wheel" "networkmanager" ];
+      extraGroups = [ "wheel" "networkmanager" ];
       isNormalUser = true;
       createHome = true;
+      # NOTE: I should harden users here if I ever
+      # have anything important on this machine
       hashedPassword = "";
       initialPassword = "";
       shell = pkgs.nushell;
@@ -84,12 +89,6 @@
     systemPackages = with pkgs; [ curl feh imagemagick ];
   };
 
-  # This value determines the NixOS release from which the default
-  # settings for stateful data, like file locations and database versions
-  # on your system were taken. It‘s perfectly fine and recommended to leave
-  # this value at the release version of the first install of this system.
-  # Before changing this value read the documentation for this option
-  # (e.g. man configuration.nix or on https://nixos.org/nixos/options.html).
   system = {
     stateVersion = "23.11";
     autoUpgrade = {

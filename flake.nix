@@ -16,13 +16,11 @@
 
       flake =
         let
-          # TODO: Change username
           myUserName = "hariamoor";
         in
         {
-          # Configurations for Linux (NixOS) machines
-          # TODO: Change hostname from "example1" to something else.
           nixosConfigurations.nixos = self.nixos-flake.lib.mkLinuxSystem {
+            _module.args = { inherit myUserName; };
             imports = [
               ./hardware-configuration.nix
               # Your machine's configuration.nix goes here
@@ -32,16 +30,14 @@
               {
                 home-manager.users.${myUserName} = {
                   imports = [ self.homeModules.default ];
-                  home.stateVersion = "23.11";
                 };
               }
             ];
           };
 
-          # home-manager configuration goes here.
           homeModules.default = { pkgs, ... }: {
             imports = [ ./home.nix ];
-            _module.args.myUserName = myUserName;
+            _module.args = { inherit myUserName; };
           };
         };
     };
