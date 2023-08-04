@@ -94,7 +94,7 @@
     autoUpgrade = {
       enable = true;
       allowReboot = true;
-      channel = "https://nixos.org/channels/nixos-unstable";
+      flake = "github:HariAmoor-professional/nixos-config/staging";
     };
   };
 }
