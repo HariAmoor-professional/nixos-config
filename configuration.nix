@@ -5,11 +5,21 @@
   };
 
   fonts = {
-    fonts = with pkgs; [ nerdfonts ];
     fontconfig.enable = true;
+    enableDefaultPackages = true;
+    packages = [
+      (pkgs.nerdfonts.override {
+        fonts = [
+          "FiraCode"
+          "DroidSansMono"
+        ];
+      })
+      # pkgs.nerdfonts
+    ];
   };
 
   networking = {
+    nameservers = [ "1.1.1.1" "8.8.8.8" ];
     networkmanager.enable = true;
     nftables.enable = true;
   };
@@ -20,11 +30,6 @@
       experimental-features = nix-command flakes
     '';
     settings = {
-      substituters = [ "https://hydra.iohk.io/" "https://iohk.cachix.org/" ];
-      trusted-public-keys = [
-        "hydra.iohk.io:f/Ea+s+dFdN+3Y/G+FDgSq+a5NEWhJGzdjvKNGv0/EQ="
-        "iohk.cachix.org-1:DpRUyj7h7V830dp/i6Nti+NEO2/nhblbov/8MW7Rqoo="
-      ];
       auto-optimise-store = true;
       trusted-users = [ myUserName ];
       max-jobs = "auto";
@@ -47,8 +52,16 @@
   sound.enable = true;
   hardware = {
     pulseaudio.enable = true;
-    opengl.enable = true;
+    opengl = {
+      enable = true;
+      driSupport = true;
+      driSupport32Bit = true;
+    };
     onlykey.enable = true;
+    nvidia = {
+      modesetting.enable = true;
+      nvidiaSettings = true;
+    };
   };
 
   services = {

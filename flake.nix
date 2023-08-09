@@ -9,10 +9,10 @@
     nixos-flake.url = "github:srid/nixos-flake";
   };
 
-  outputs = inputs@{ self, ... }:
-    inputs.flake-parts.lib.mkFlake { inherit inputs; } {
+  outputs = inputs@{ self, flake-parts, home-manager, nixos-flake, ... }:
+    flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
-      imports = [ inputs.nixos-flake.flakeModule ];
+      imports = [ nixos-flake.flakeModule ];
 
       flake =
         let
@@ -20,6 +20,7 @@
         in
         {
           nixosConfigurations.nixos = self.nixos-flake.lib.mkLinuxSystem {
+            nixpkgs.hostPlatform = "x86_64-linux";
             _module.args = { inherit myUserName; };
             imports = [
               ./hardware-configuration.nix
