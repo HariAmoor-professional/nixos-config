@@ -37,7 +37,10 @@
           };
 
           homeModules.default = { pkgs, ... }: {
-            imports = [ ./home.nix ];
+            imports = [
+              ./xmonad/xmobar.nix
+              ./home.nix
+            ];
             _module.args = { inherit myUserName; };
           };
         };

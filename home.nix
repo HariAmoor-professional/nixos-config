@@ -29,7 +29,7 @@ rec {
     alacritty.enable = true;
     btop = {
       enable = true;
-      settings.color_theme = "onedark";
+      settings.color_theme = "nightfox";
     };
     chromium = {
       enable = true;
@@ -64,7 +64,7 @@ rec {
       enable = true;
       environmentVariables.EDITOR = "hx";
       extraConfig = ''
-        let-env config = {
+        $env.config = {
           ls: {
             use_ls_colors: true
           }
@@ -80,7 +80,7 @@ rec {
     helix = {
       enable = true;
       settings = {
-        theme = "onedark";
+        theme = "nightfox";
         editor = {
           lsp.display-messages = true;
           line-number = "relative";
@@ -132,5 +132,7 @@ rec {
       enable = true;
       frequency = "weekly";
     };
+
+    xmobar.enable = true;
   };
 }
