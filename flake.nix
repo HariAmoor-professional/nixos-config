@@ -3,13 +3,26 @@
     # Principle inputs (updated by `nix run .#update`)
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
-    home-manager.inputs.nixpkgs.follows = "nixpkgs";
 
     flake-parts.url = "github:hercules-ci/flake-parts";
     nixos-flake.url = "github:srid/nixos-flake";
+
+    nixos-generators.url = "github:nix-community/nixos-generators/master";
+    hyprland.url = "github:hyprwm/hyprland";
+    hyprland-plugins.url = "github:hyprwm/hyprland-plugins";
   };
 
-  outputs = inputs@{ self, flake-parts, home-manager, nixos-flake, ... }:
+  outputs =
+    inputs@{ self
+    , nixpkgs
+    , flake-parts
+    , home-manager
+    , nixos-flake
+    , nixos-generators
+    , hyprland
+    , hyprland-plugins
+    , ...
+    }:
     flake-parts.lib.mkFlake { inherit inputs; } {
       systems = [ "x86_64-linux" ];
       imports = [ nixos-flake.flakeModule ];
@@ -19,29 +32,28 @@
           myUserName = "hariamoor";
         in
         {
-          nixosConfigurations.nixos = self.nixos-flake.lib.mkLinuxSystem {
-            nixpkgs.hostPlatform = "x86_64-linux";
-            _module.args = { inherit myUserName; };
+          nixosModules.default = {
+            nixpkgs.hostPlatform = builtins.currentSystem;
             imports = [
               ./hardware-configuration.nix
-              # Your machine's configuration.nix goes here
               ./configuration.nix
-              # Setup home-manager in NixOS config
-              self.nixosModules.home-manager
-              {
-                home-manager.users.${myUserName} = {
-                  imports = [ self.homeModules.default ];
-                };
-              }
+              nixos-generators.nixosModules.all-formats
             ];
           };
 
-          homeModules.default = { pkgs, ... }: {
-            imports = [
-              ./xmonad/xmobar.nix
-              ./home.nix
-            ];
+          nixosConfigurations.nixos = self.nixos-flake.lib.mkLinuxSystem {
             _module.args = { inherit myUserName; };
+            imports = [ self.nixosModules.default ];
+          };
+
+          homeConfigurations."hariamoor@nixos" = home-manager.lib.homeManagerConfiguration {
+            configuration = import ./home.nix;
+            extraSpecialArgs = { inherit inputs; };
+            pkgs = nixpkgs.legacyPackages.${builtins.currentSystem};
+
+            modules = [
+              hyprland.homeManagerModules.default
+            ];
           };
         };
     };

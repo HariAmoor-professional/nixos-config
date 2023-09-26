@@ -1,4 +1,4 @@
-{ config, pkgs, myUserName, ... }: {
+{ inputs, config, pkgs, myUserName, ... }: {
   boot = {
     binfmt.emulatedSystems = [ "aarch64-linux" ];
     loader.systemd-boot.enable = true;
@@ -7,19 +7,10 @@
   fonts = {
     fontconfig.enable = true;
     enableDefaultPackages = true;
-    packages = [
-      (pkgs.nerdfonts.override {
-        fonts = [
-          "FiraCode"
-          "DroidSansMono"
-        ];
-      })
-      # pkgs.nerdfonts
-    ];
+    packages = [ pkgs.nerdfonts ];
   };
 
   networking = {
-    nameservers = [ "1.1.1.1" "8.8.8.8" ];
     networkmanager.enable = true;
     nftables.enable = true;
   };
@@ -50,8 +41,8 @@
 
   location.provider = "geoclue2";
   sound.enable = true;
+  security.rtkit.enable = true;
   hardware = {
-    pulseaudio.enable = true;
     opengl = {
       enable = true;
       driSupport = true;
@@ -64,21 +55,38 @@
     };
   };
 
+  programs.hyprland = {
+    enable = true;
+    enableNvidiaPatches = true;
+    xwayland.enable = true;
+  };
+
   services = {
     geoclue2.enable = true;
     ratbagd.enable = true;
     trezord.enable = true;
     dbus.enable = true;
+    pipewire = {
+      enable = true;
+      alsa = {
+        enable = true;
+        support32Bit = true;
+      };
+      pulse.enable = true;
+      jack.enable = true;
+    };
+
     xserver = {
       enable = true;
-      windowManager.xmonad = {
-        enable = true;
-        config = builtins.readFile ./xmonad/xmonad.hs;
-        enableContribAndExtras = true;
-        enableConfiguredRecompile = true;
-      };
+      layout = "us";
+      xkbVariant = "";
+      excludePackages = with pkgs; [ xterm ];
       videoDrivers = [ "nvidia" ];
-      xkbOptions = "caps:escape";
+      libinput.enable = true;
+      displayManager.gdm = {
+        enable = true;
+        wayland = true;
+      };
     };
   };
 
@@ -99,7 +107,8 @@
   };
 
   environment = {
-    systemPackages = with pkgs; [ curl feh imagemagick ];
+    sessionVariables."NIXOS_OZONE_WL" = "1";
+    etc."resolv.conf".text = "nameserver 1.1.1.1\nnameserver 8.8.8.8\noptions edns0";
   };
 
   system = {
@@ -108,6 +117,14 @@
       enable = true;
       allowReboot = true;
       flake = "github:HariAmoor-professional/nixos-config/staging";
+    };
+  };
+
+  xdg = {
+    autostart.enable = true;
+    portal = {
+      enable = true;
+      extraPortals = with pkgs; [ xdg-desktop-portal xdg-desktop-portal-gtk ];
     };
   };
 }
