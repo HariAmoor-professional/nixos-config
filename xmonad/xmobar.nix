@@ -4,7 +4,8 @@ with lib;
 
 let
   cfg = config.services.xmobar;
-in {
+in
+{
   options = {
     services.xmobar = {
       enable = mkEnableOption "xmobar";
